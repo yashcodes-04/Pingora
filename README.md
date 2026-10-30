@@ -291,5 +291,6 @@ const socket = io("http://localhost:5000", {
 | `public:send_message` | Client $\rightarrow$ Server | `{ content }` | Drop message into public room |
 | `public:new_message` | Server $\rightarrow$ Client | `{ message }` | Broadcast to all clients in public room |
 
-#   P i n g o r a  
+#   P i n g o r a 
+ 
  
