@@ -19,7 +19,7 @@ Pingora is a high-performance real-time messaging backend inspired by WhatsApp, 
 
 3. **Real-time 1-on-1 Direct Messaging**
    - Socket.io powered instant message delivery.
-   - Message status receipts: `SENT` $\rightarrow$ `DELIVERED` $\rightarrow$ `READ`.
+   - Message status receipts: `SENT` → `DELIVERED` → `READ`.
    - Real-time typing indicators (`typing_start`, `typing_stop`).
    - Online/Offline presence tracking with automatic `lastSeenAt` timestamps.
 
@@ -42,7 +42,7 @@ Pingora is a high-performance real-time messaging backend inspired by WhatsApp, 
 | Layer | Technology | Purpose |
 | :--- | :--- | :--- |
 | **Runtime & Language** | Node.js (v20+) & TypeScript | Type safety, maintainability, modern ES syntax |
-| **HTTP Framework** | Express.js 4/5 | Modular routing, middlewares, and error handling |
+| **HTTP Framework** | Express.js | Modular routing, middlewares, and error handling |
 | **Real-time Engine** | Socket.io 4.8+ | Bi-directional WebSocket communication & room management |
 | **Database** | Neon PostgreSQL | Serverless PostgreSQL with connection pooling |
 | **ORM** | Prisma 5.22 | Type-safe migrations, relations, and query building |
@@ -192,8 +192,8 @@ Edit `.env` with your Neon credentials and settings:
 ```env
 PORT=5000
 NODE_ENV=development
-DATABASE_URL="postgresql://<username>:<password>@ep-your-pooler.neon.tech/pingora?sslmode=require"
-DIRECT_URL="postgresql://<username>:<password>@ep-your-direct.neon.tech/pingora?sslmode=require"
+DATABASE_URL="postgresql://<username>:<password>@ep-your-pooler.neon.tech/neondb?sslmode=require"
+DIRECT_URL="postgresql://<username>:<password>@ep-your-direct.neon.tech/neondb?sslmode=require"
 JWT_SECRET="your_strong_random_jwt_secret"
 HEYGEN_API_KEY="your_heygen_api_key"
 CLIENT_ORIGIN="http://localhost:3000,http://localhost:5173"
@@ -279,17 +279,14 @@ const socket = io("http://localhost:5000", {
 
 | Event Name | Direction | Payload | Description |
 | :--- | :--- | :--- | :--- |
-| `presence:online` | Server $\rightarrow$ Client | `{ userId, username }` | Broadcast when a user comes online |
-| `presence:offline` | Server $\rightarrow$ Client | `{ userId, lastSeenAt }` | Broadcast when a user disconnects |
-| `chat:join` | Client $\rightarrow$ Server | `{ conversationId }` | Subscribe to conversation room |
-| `chat:send_message` | Client $\rightarrow$ Server | `{ conversationId, content, recipientId }` | Send 1-on-1 message |
-| `chat:new_message` | Server $\rightarrow$ Client | `{ message, conversationId }` | Delivered to recipient and conversation room |
-| `chat:typing_start` | Client $\leftrightarrow$ Server | `{ conversationId, recipientId }` | Relays typing indicator |
-| `chat:typing_stop` | Client $\leftrightarrow$ Server | `{ conversationId, recipientId }` | Relays stopped typing |
-| `chat:message_read` | Client $\leftrightarrow$ Server | `{ conversationId, readerId }` | Notifies sender of read receipt |
-| `public:join` | Client $\rightarrow$ Server | - | Join global public chat room |
-| `public:send_message` | Client $\rightarrow$ Server | `{ content }` | Drop message into public room |
-| `public:new_message` | Server $\rightarrow$ Client | `{ message }` | Broadcast to all clients in public room |
-
-#   P i n g o r a  
- 
+| `presence:online` | Server → Client | `{ userId, username }` | Broadcast when a user comes online |
+| `presence:offline` | Server → Client | `{ userId, lastSeenAt }` | Broadcast when a user disconnects |
+| `chat:join` | Client → Server | `{ conversationId }` | Subscribe to conversation room |
+| `chat:send_message` | Client → Server | `{ conversationId, content, recipientId }` | Send 1-on-1 message |
+| `chat:new_message` | Server → Client | `{ message, conversationId }` | Delivered to recipient and conversation room |
+| `chat:typing_start` | Client ↔ Server | `{ conversationId, recipientId }` | Relays typing indicator |
+| `chat:typing_stop` | Client ↔ Server | `{ conversationId, recipientId }` | Relays stopped typing |
+| `chat:message_read` | Client ↔ Server | `{ conversationId, readerId }` | Notifies sender of read receipt |
+| `public:join` | Client → Server | - | Join global public chat room |
+| `public:send_message` | Client → Server | `{ content }` | Drop message into public room |
+| `public:new_message` | Server → Client | `{ message }` | Broadcast to all clients in public room |
